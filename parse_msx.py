@@ -272,6 +272,7 @@ def abbreviate(item, translations_cache):
         if title in translations_cache:
             abb['kt'] = translations_cache[title]
     if item.get('sf'): abb['sf'] = item['sf']
+    if item.get('yt'): abb['yt'] = item['yt']
     if item.get('year'): abb['y'] = item['year']
     if item.get('publisher'): abb['p'] = item['publisher']
     if item.get('system'): abb['s'] = item['system']
@@ -332,6 +333,24 @@ def main():
         if norm:
             screenshot_lookup[norm] = path
 
+    # Load YouTube links cache
+    youtube_links = {}
+    yt_links_path = os.path.join(directory, "youtube_links.json")
+    if os.path.exists(yt_links_path):
+        try:
+            with open(yt_links_path, "r", encoding="utf-8") as yt_f:
+                youtube_links = json.load(yt_f)
+            print(f"Loaded {len(youtube_links)} YouTube links from cache.")
+        except Exception as e:
+            print(f"Error loading YouTube links cache: {e}")
+
+    # Build a normalized YouTube lookup
+    yt_lookup = {}
+    for yt_title, yt_id in youtube_links.items():
+        norm_yt = normalize_title(yt_title)
+        if norm_yt:
+            yt_lookup[norm_yt] = yt_id
+
     aliases = {
         'albatros': 'albatross',
         'algesnoyoku': 'algeesenotsubasa',
@@ -356,12 +375,14 @@ def main():
             
     print(f"Total software entries collected: {len(all_software)}")
     
-    # Map software entries to screenshots
+    # Map software entries to screenshots and YouTube videos
     mapped_count = 0
+    yt_mapped_count = 0
     for item in all_software:
         title = item.get('title', '')
         norm = normalize_title(title)
         
+        # 1. Screenshot mapping
         sf = None
         if norm in screenshot_lookup:
             sf = screenshot_lookup[norm]
@@ -377,8 +398,26 @@ def main():
         if sf:
             item['sf'] = sf
             mapped_count += 1
+
+        # 2. YouTube mapping
+        yt = None
+        if norm in yt_lookup:
+            yt = yt_lookup[norm]
+        elif norm in aliases and aliases[norm] in yt_lookup:
+            yt = yt_lookup[aliases[norm]]
+        else:
+            if len(norm) > 4:
+                for yt_norm, yt_id in yt_lookup.items():
+                    if len(yt_norm) > 4:
+                        if norm in yt_norm or yt_norm in norm:
+                            yt = yt_id
+                            break
+        if yt:
+            item['yt'] = yt
+            yt_mapped_count += 1
             
-    print(f"Mapped {mapped_count} / {len(all_software)} software entries to screenshots.")
+    print(f"Mapped {mapped_count} software entries to screenshots.")
+    print(f"Mapped {yt_mapped_count} / {len(all_software)} software entries to YouTube gameplay videos.")
 
     # Abbreviate entries to save file size
     abbreviated_software = [abbreviate(item, translations_cache) for item in all_software]

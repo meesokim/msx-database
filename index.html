@@ -281,6 +281,17 @@
         <div id="modal-screenshot-container" class="screenshot-box" style="display: none;">
           <img id="modal-screenshot" src="" alt="Game Screenshot" referrerpolicy="no-referrer">
         </div>
+
+        <!-- YouTube Gameplay Video -->
+        <div id="modal-youtube-container" class="youtube-box" style="display: none;">
+          <div class="modal-section-title" style="margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center;">
+            <i class="fa-brands fa-youtube" style="color: #ff0000; margin-right: 0.5rem; font-size: 1.2rem;"></i>
+            <span>플레이 영상 (Gameplay Video)</span>
+          </div>
+          <div class="video-wrapper">
+            <iframe id="modal-youtube-iframe" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
         
         <!-- Metadata Grid -->
         <div class="modal-section-title">기본 정보 (Metadata)</div>
@@ -316,6 +327,10 @@
           <div class="detail-row detail-full-width">
             <div class="detail-lbl">DB 설명</div>
             <div class="detail-val" id="modal-dbdesc">-</div>
+          </div>
+          <div class="detail-row detail-full-width">
+            <div class="detail-lbl">유튜브 검색</div>
+            <div class="detail-val" id="modal-youtube-link-container">-</div>
           </div>
         </div>
 

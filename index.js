@@ -94,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })) : [],
     db_file: item.df || '',
     db_desc: item.dd || '',
-    screenshot: item.sf || null
+    screenshot: item.sf || null,
+    youtube: item.yt || null
   }));
 
   initFilters();
@@ -804,6 +805,30 @@ function showDetails(id, type) {
     screenshotContainer.style.display = 'none';
   }
 
+  // YouTube player loading
+  const youtubeContainer = document.getElementById('modal-youtube-container');
+  const youtubeIframe = document.getElementById('modal-youtube-iframe');
+  const ytSearchLinkContainer = document.getElementById('modal-youtube-link-container');
+
+  if (item.youtube) {
+    youtubeContainer.style.display = 'block';
+    youtubeIframe.src = 'https://www.youtube.com/embed/' + item.youtube;
+    
+    const videoUrl = `https://www.youtube.com/watch?v=${item.youtube}`;
+    ytSearchLinkContainer.innerHTML = `<a href="${videoUrl}" target="_blank" style="color: #ff00ff; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;"><i class="fa-brands fa-youtube" style="font-size: 1.1rem; color: #ff0000;"></i> 유튜브에서 재생 (Watch on YouTube)</a>`;
+  } else {
+    youtubeContainer.style.display = 'none';
+    youtubeIframe.src = '';
+    
+    let queryTerms = `MSX ${item.title}`;
+    if (item.ko_title) {
+      queryTerms += ` ${item.ko_title}`;
+    }
+    queryTerms += ' gameplay';
+    const ytSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(queryTerms)}`;
+    ytSearchLinkContainer.innerHTML = `<a href="${ytSearchUrl}" target="_blank" style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;"><i class="fa-brands fa-youtube" style="font-size: 1.1rem; color: var(--text-muted);"></i> 유튜브에서 검색 (Search gameplay)</a>`;
+  }
+
   if (item.ko_title) {
     modalTitle.textContent = item.ko_title;
     let subTitleText = item.title;
@@ -926,6 +951,10 @@ function showDetails(id, type) {
 function closeModal() {
   modalOverlay.classList.remove('active');
   document.body.style.overflow = '';
+  const youtubeIframe = document.getElementById('modal-youtube-iframe');
+  if (youtubeIframe) {
+    youtubeIframe.src = '';
+  }
 }
 
 // File Size Formatting Utility (supports hexadecimal sizes too)
