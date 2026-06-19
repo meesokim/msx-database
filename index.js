@@ -1003,13 +1003,14 @@ function initThemeToggle() {
   const themeIconSun = document.getElementById('theme-icon-sun');
   const themeIconMoon = document.getElementById('theme-icon-moon');
 
-  // Check saved theme
-  const currentTheme = localStorage.getItem('theme') || 'dark';
+  // Check saved theme, default to 'light'
+  const currentTheme = localStorage.getItem('theme') || 'light';
   if (currentTheme === 'light') {
     document.body.classList.add('light-theme');
     if (themeIconSun) themeIconSun.style.display = 'block';
     if (themeIconMoon) themeIconMoon.style.display = 'none';
   } else {
+    document.body.classList.remove('light-theme');
     if (themeIconSun) themeIconSun.style.display = 'none';
     if (themeIconMoon) themeIconMoon.style.display = 'block';
   }
