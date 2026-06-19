@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Local downloader marker files
+screenshots/*.404
+
+# Temporary scraper html files
+planetemu.html
+planetemu_page1.html
+planetemu_msx2.html
+planetemu_msx_1_2.html
+planetemu_page1.html

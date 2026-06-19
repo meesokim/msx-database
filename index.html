@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSX Software & ROM Database</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="MSX1, MSX2, MSX2+, TurboR의 롬 및 디스크 소프트웨어 데이터베이스 검색 도구. 용량, CRC32, SHA1 값 확인 가능.">
+  <meta name="keywords" content="MSX, MSX2, Emulator, ROM, Database, XML, MAME, OpenMSX, CRC32, SHA1">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <div class="logo-icon">M</div>
+        <div class="logo-text">
+          <h1>MSX DATABASE</h1>
+          <p>SOFTWARE & ROM REFERENCE HUB</p>
+        </div>
+      </div>
+      
+      <div class="header-stats">
+        <div class="stat-quick">
+          <span class="stat-quick-val" id="stat-total">0</span>
+          <span class="stat-quick-lbl">Total Games</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    
+    <!-- Sidebar Panel (Stats & Filters) -->
+    <div class="sidebar">
+      
+      <!-- Statistics Dashboard -->
+      <div class="panel">
+        <div class="panel-title">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>시스템 통계</span>
+        </div>
+        <div class="stats-list">
+          <!-- System Breakdown -->
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-gamepad" style="color: #60a5fa;"></i> MSX1</span>
+              <span class="stat-val" id="stat-msx1">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-msx1" style="background-color: #3b82f6; width: 0%;"></div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-gamepad" style="color: #34d399;"></i> MSX2</span>
+              <span class="stat-val" id="stat-msx2">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-msx2" style="background-color: #10b981; width: 0%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-gamepad" style="color: #fbbf24;"></i> MSX2+</span>
+              <span class="stat-val" id="stat-msx2p">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-msx2p" style="background-color: #f59e0b; width: 0%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-gamepad" style="color: #f472b6;"></i> TurboR</span>
+              <span class="stat-val" id="stat-msxtr">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-msxtr" style="background-color: #ec4899; width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div style="margin-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem;"></div>
+
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-box" style="color: #a78bfa;"></i> 카트리지</span>
+              <span class="stat-val" id="stat-cartridges">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-cart" style="background-color: #8b5cf6; width: 0%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-floppy-disk" style="color: #60a5fa;"></i> 디스켓</span>
+              <span class="stat-val" id="stat-floppies">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-flop" style="background-color: #3b82f6; width: 0%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="stat-item">
+              <span class="stat-label"><i class="fa-solid fa-tape" style="color: #f472b6;"></i> 카세트 테이프</span>
+              <span class="stat-val" id="stat-cassettes">0</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="pb-cass" style="background-color: #ec4899; width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Filters Panel -->
+      <div class="panel">
+        <div class="panel-title">
+          <i class="fa-solid fa-sliders"></i>
+          <span>상세 검색 필터</span>
+        </div>
+        
+        <!-- System Filter -->
+        <div class="form-group">
+          <label for="filter-system">시스템 사양 (System)</label>
+          <select id="filter-system" class="form-control">
+            <option value="all">전체보기 (All Systems)</option>
+            <option value="MSX">MSX</option>
+            <option value="MSX1">MSX1</option>
+            <option value="MSX2">MSX2</option>
+            <option value="MSX2+">MSX2+</option>
+            <option value="MSX TurboR">MSX TurboR</option>
+          </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="form-group">
+          <label for="filter-category">미디어 분류 (Media Type)</label>
+          <select id="filter-category" class="form-control">
+            <option value="all">전체보기 (All Media)</option>
+            <option value="Cartridge">Cartridge (카트리지)</option>
+            <option value="Floppy">Floppy Disk (디스켓)</option>
+            <option value="Cassette">Cassette Tape (테이프)</option>
+            <option value="Bee Card">Hudson Bee Card</option>
+            <option value="Softcard">MSX Softcard</option>
+          </select>
+        </div>
+
+        <!-- Publisher Filter -->
+        <div class="form-group">
+          <label for="filter-publisher">출판사/제작사 (Publisher)</label>
+          <select id="filter-publisher" class="form-control">
+            <option value="all">전체보기 (All Publishers)</option>
+          </select>
+        </div>
+
+        <!-- Year Filter -->
+        <div class="form-group">
+          <label for="filter-year">출시연도 (Year)</label>
+          <select id="filter-year" class="form-control">
+            <option value="all">전체보기 (All Years)</option>
+          </select>
+        </div>
+
+        <!-- Sorting -->
+        <div class="form-group">
+          <label for="sort-by">정렬 기준 (Sort By)</label>
+          <select id="sort-by" class="form-control">
+            <option value="title-asc">게임명 오름차순 (A-Z)</option>
+            <option value="title-desc">게임명 내림차순 (Z-A)</option>
+            <option value="year-desc">최신 출시순 (Newest)</option>
+            <option value="year-asc">오래된 출시순 (Oldest)</option>
+            <option value="publisher-asc">제작사 알파벳순</option>
+          </select>
+        </div>
+
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <!-- Exclude Clones Check -->
+          <label class="checkbox-group">
+            <input type="checkbox" id="filter-exclude-clones" checked>
+            <span>복제판/중복 제외 (No Clones)</span>
+          </label>
+
+          <!-- Supported Only Check -->
+          <label class="checkbox-group">
+            <input type="checkbox" id="filter-supported-only">
+            <span>실행 가능한 덤프만</span>
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Side Content Area -->
+    <div class="content-area">
+      
+      <!-- Search Input & View Toggles -->
+      <div class="panel search-panel">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" class="form-control" placeholder="게임명, 시리얼, CRC32, SHA1, 파일명 검색...">
+        </div>
+        
+        <div class="view-toggles">
+          <button id="view-grid-btn" class="view-toggle-btn" title="카드 그리드 보기">
+            <i class="fa-solid fa-grip"></i>
+          </button>
+          <button id="view-list-btn" class="view-toggle-btn active" title="리스트 테이블 보기">
+            <i class="fa-solid fa-list"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Counts and Information -->
+      <div class="results-header">
+        <div class="results-count">
+          검색된 게임: <span id="results-count-val">0</span>개
+        </div>
+      </div>
+
+      <!-- Search Results Grid/List Container -->
+      <div id="results-container" class="results-container">
+        <!-- Rendered dynamically by Javascript -->
+      </div>
+
+      <!-- Pagination Footer -->
+      <div id="pagination-container" class="pagination">
+        <!-- Rendered dynamically by Javascript -->
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>MSX SOFTWARE DATABASE &copy; 2026. GENERATED VIA ANTIGRAVITY AGENT</p>
+    <p style="margin-top: 0.25rem; font-size: 0.65rem; opacity: 0.5;">POWERED BY XML SOFTPHY / HASH LISTS</p>
+  </footer>
+
+  <!-- Details View Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-header-badges">
+            <span class="system-badge" id="modal-badge-system">MSX</span>
+            <span class="category-badge" id="modal-badge-category">Cartridge</span>
+          </div>
+          <h2 class="modal-title" id="modal-title">Game Title</h2>
+          <div class="modal-alt-title" id="modal-alt-title">Alternative Title</div>
+        </div>
+        <button class="modal-close" id="modal-close" title="닫기"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        
+        <!-- Screenshot -->
+        <div id="modal-screenshot-container" class="screenshot-box" style="display: none;">
+          <img id="modal-screenshot" src="" alt="Game Screenshot" referrerpolicy="no-referrer">
+        </div>
+        
+        <!-- Metadata Grid -->
+        <div class="modal-section-title">기본 정보 (Metadata)</div>
+        <div class="details-grid">
+          <div class="detail-row">
+            <div class="detail-lbl">고유 식별자</div>
+            <div class="detail-val mono" id="modal-id">-</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-lbl">출시 연도</div>
+            <div class="detail-val mono" id="modal-year">-</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-lbl">제작사 / 배급사</div>
+            <div class="detail-val" id="modal-publisher">-</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-lbl">시리얼 넘버</div>
+            <div class="detail-val mono" id="modal-serial">-</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-lbl">부모 소프트웨어</div>
+            <div class="detail-val mono" id="modal-cloneof">-</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-lbl">동작 상태</div>
+            <div class="detail-val" id="modal-supported">-</div>
+          </div>
+          <div class="detail-row detail-full-width">
+            <div class="detail-lbl">데이터베이스 파일</div>
+            <div class="detail-val mono" id="modal-dbfile">-</div>
+          </div>
+          <div class="detail-row detail-full-width">
+            <div class="detail-lbl">DB 설명</div>
+            <div class="detail-val" id="modal-dbdesc">-</div>
+          </div>
+        </div>
+
+        <!-- Usage & Notes -->
+        <div id="modal-notes-container" class="notes-box" style="display: none;">
+          <p id="modal-notes"></p>
+        </div>
+
+        <!-- Parts & ROMs Info -->
+        <div class="modal-section-title">파트 및 롬 파일 목록 (Parts & ROMs)</div>
+        <div id="modal-parts-container">
+          <!-- Rendered dynamically by Javascript -->
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Clipboard Copy Toast Notification -->
+  <div class="copy-toast" id="copy-toast">클립보드에 복사되었습니다.</div>
+
+  <!-- Load Database and Application Scripts -->
+  <script src="msx_data.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
