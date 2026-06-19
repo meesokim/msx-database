@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   computeStats();
   applyFiltersAndSearch();
   setupEventListeners();
+  initThemeToggle();
 });
 
 // Calculate statistics and render dashboard
@@ -540,6 +541,7 @@ function renderGrid(items) {
     const sysClass = getSystemClass(item.system);
     const hasClone = item.cloneof ? `<span class="clone-badge">Clone</span>` : '';
     const hasScreenshot = item.screenshot ? `<i class="fa-regular fa-image" style="color: var(--accent-cyan); margin-left: 0.35rem;" title="스크린샷 있음"></i>` : '';
+    const hasVideo = item.youtube ? `<i class="fa-brands fa-youtube" style="color: #ff0000; margin-left: 0.35rem; font-size: 1.05em; vertical-align: middle;" title="플레이 영상 있음"></i>` : '';
     
     // Choose main title (Korean if translated, else English)
     let mainTitle = item.title;
@@ -564,7 +566,7 @@ function renderGrid(items) {
           <span class="system-badge ${sysClass}">${item.system}</span>
           <span class="category-badge">${item.category}</span>
         </div>
-        <h3 class="game-title" title="${mainTitle}">${mainTitle}${hasScreenshot}</h3>
+        <h3 class="game-title" title="${mainTitle}">${mainTitle}${hasScreenshot}${hasVideo}</h3>
         ${subTitleHtml}
         <div class="game-publisher" title="${item.publisher}">${item.publisher}</div>
         <div class="game-year-serial">
@@ -615,6 +617,7 @@ function renderList(items) {
     const sysClass = getSystemClass(item.system);
     const cloneLabel = item.cloneof ? ` <span class="clone-badge" style="font-size:0.6rem;">Clone</span>` : '';
     const hasScreenshot = item.screenshot ? `<i class="fa-regular fa-image" style="color: var(--accent-cyan); margin-left: 0.35rem;" title="스크린샷 있음"></i>` : '';
+    const hasVideo = item.youtube ? `<i class="fa-brands fa-youtube" style="color: #ff0000; margin-left: 0.35rem; font-size: 1.05em; vertical-align: middle;" title="플레이 영상 있음"></i>` : '';
     const dbType = item.category === 'Hash Database' ? 'hsi' : 'xml';
     
     // Choose main title (Korean if translated, else English)
@@ -633,7 +636,7 @@ function renderList(items) {
         <td><span class="system-badge ${sysClass}">${item.system}</span></td>
         <td><span class="category-badge">${item.category}</span></td>
         <td>
-          <div class="table-title" title="${mainTitle}">${mainTitle}${cloneLabel}${hasScreenshot}</div>
+          <div class="table-title" title="${mainTitle}">${mainTitle}${cloneLabel}${hasScreenshot}${hasVideo}</div>
           ${subTitles.length > 0 ? `<div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">${subTitles.join(' / ')}</div>` : ''}
         </td>
         <td>${item.publisher}</td>
@@ -993,4 +996,38 @@ function showToast(msg) {
   setTimeout(() => {
     copyToast.classList.remove('active');
   }, 2000);
+}
+
+function initThemeToggle() {
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const themeIconSun = document.getElementById('theme-icon-sun');
+  const themeIconMoon = document.getElementById('theme-icon-moon');
+
+  // Check saved theme
+  const currentTheme = localStorage.getItem('theme') || 'dark';
+  if (currentTheme === 'light') {
+    document.body.classList.add('light-theme');
+    if (themeIconSun) themeIconSun.style.display = 'block';
+    if (themeIconMoon) themeIconMoon.style.display = 'none';
+  } else {
+    if (themeIconSun) themeIconSun.style.display = 'none';
+    if (themeIconMoon) themeIconMoon.style.display = 'block';
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      
+      if (isLight) {
+        if (themeIconSun) themeIconSun.style.display = 'block';
+        if (themeIconMoon) themeIconMoon.style.display = 'none';
+      } else {
+        if (themeIconSun) themeIconSun.style.display = 'none';
+        if (themeIconMoon) themeIconMoon.style.display = 'block';
+      }
+    });
+  }
 }
